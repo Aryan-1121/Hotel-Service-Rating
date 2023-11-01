@@ -4,6 +4,7 @@ import com.hmproject.user.service.entities.Hotel;
 import com.hmproject.user.service.entities.Rating;
 import com.hmproject.user.service.entities.User;
 import com.hmproject.user.service.exceptions.ResourceNotFoundException;
+import com.hmproject.user.service.external.services.HotelService;
 import com.hmproject.user.service.repositories.UserRepository;
 import com.hmproject.user.service.services.UserService;
 import lombok.extern.slf4j.Slf4j;
@@ -27,6 +28,10 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private RestTemplate restTemplate;
+
+    // for feignClient -
+    @Autowired
+    private HotelService hotelService;
 
     private Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
 
@@ -70,10 +75,13 @@ public class UserServiceImpl implements UserService {
 //            ResponseEntity<Hotel> hotelResponseEntity = restTemplate.getForEntity("http://localhost:8082/hotels/" + rating.getHotelId(), Hotel.class);
 
 //            need to make dynamic host and port ->  (possible because we have already defined name in our service registry)
-            ResponseEntity<Hotel> hotelResponseEntity = restTemplate.getForEntity("http://HOTEL-SERVICE/hotels/" + rating.getHotelId(), Hotel.class);
+//            ResponseEntity<Hotel> hotelResponseEntity = restTemplate.getForEntity("http://HOTEL-SERVICE/hotels/" + rating.getHotelId(), Hotel.class);
+//            Hotel hotel = hotelResponseEntity.getBody();
+//            logger.info("response status code -> {}", hotelResponseEntity.getStatusCode());
+//            if we want to use feign Client ->
+            Hotel hotel = hotelService.getHotel(rating.getHotelId());
 
-            Hotel hotel = hotelResponseEntity.getBody();
-            logger.info("response status code -> {}", hotelResponseEntity.getStatusCode());
+
             rating.setHotel(hotel);
             return rating;
         }).toList();
