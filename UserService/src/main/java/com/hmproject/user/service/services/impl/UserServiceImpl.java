@@ -57,7 +57,7 @@ public class UserServiceImpl implements UserService {
         //  we need some client which can contact with http server with the help of http api/client  -> we can use REST-TEMPLATE of feign client
 
 //       ArrayList<Rating> ratingsByUser= restTemplate.getForObject("http://localhost:8083/ratings/users/"+user.getUserId(), ArrayList.class);
-        Rating[] ratingsByUser= restTemplate.getForObject("http://localhost:8083/ratings/users/"+user.getUserId(), Rating[].class);
+        Rating[] ratingsByUser= restTemplate.getForObject("http://RATING-SERVICE/ratings/users/"+user.getUserId(), Rating[].class);
         logger.info("{} ",ratingsByUser);
 
         List<Rating> ratings= Arrays.stream(ratingsByUser).toList();
@@ -67,7 +67,11 @@ public class UserServiceImpl implements UserService {
             // now we also need hotel details on which user had rated
             // api call to hotel service to get the hotel
 
-            ResponseEntity<Hotel> hotelResponseEntity = restTemplate.getForEntity("http://localhost:8082/hotels/" + rating.getHotelId(), Hotel.class);
+//            ResponseEntity<Hotel> hotelResponseEntity = restTemplate.getForEntity("http://localhost:8082/hotels/" + rating.getHotelId(), Hotel.class);
+
+//            need to make dynamic host and port ->  (possible because we have already defined name in our service registry)
+            ResponseEntity<Hotel> hotelResponseEntity = restTemplate.getForEntity("http://HOTEL-SERVICE/hotels/" + rating.getHotelId(), Hotel.class);
+
             Hotel hotel = hotelResponseEntity.getBody();
             logger.info("response status code -> {}", hotelResponseEntity.getStatusCode());
             rating.setHotel(hotel);

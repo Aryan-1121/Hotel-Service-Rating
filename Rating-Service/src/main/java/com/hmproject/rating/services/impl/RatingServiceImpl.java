@@ -36,7 +36,7 @@ public class RatingServiceImpl implements RatingService {
 
         List<Rating> ratingList = ratingsByUserId.stream().peek(rating -> {
 
-            ResponseEntity<Hotel> hotelResponseEntity = restTemplate.getForEntity("http://localhost:8082/hotels/"+rating.getHotelId(), Hotel.class);
+            ResponseEntity<Hotel> hotelResponseEntity = restTemplate.getForEntity("http://HOTEL-SERVICE/hotels/"+rating.getHotelId(), Hotel.class);
 
             Hotel hotel = hotelResponseEntity.getBody();
             rating.setHotel(hotel);
