@@ -10,5 +10,5 @@ spring:
     config:
       server:
         git:
-          uri:
+          uri: https://github.com/Aryan-1121/hotel-rating-config-server.git
           clone-on-start: true
