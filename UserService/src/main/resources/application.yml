@@ -1,8 +1,8 @@
 server:
   port: 8081
-
 spring:
   application:
+#    this application.name will be overridden by the name provided in the application.yml on GitHub if provided their
     name: USER-SERVICE
   datasource:
     url: jdbc:mysql://127.0.0.1:3306/microservices
@@ -16,17 +16,26 @@ spring:
       ddl-auto: update
     show-sql: true
 
+  config:
+    import:
+      - optional:configserver:http://localhost:8085
+
+
+# we can easily switch between profiles (default/prod/dev.. etc)
+#  profiles:
+#    active: prod
+
 #    dialect will be auto-detected
 #    properties:
 #      hibernate:
 #        dialect: org.hibernate.dialect.MySQL8Dialect
 
 
-eureka:
-  instance:
-    prefer-ip-address: true
-  client:
-    fetch-registry: true
-    register-with-eureka: true      #this is also bydefault true
-    service-url:
-      defaultZone: http://localhost:8761/eureka
+#eureka:
+#  instance:
+#    prefer-ip-address: true
+#  client:
+#    fetch-registry: true
+#    register-with-eureka: true      #this is also bydefault true
+#    service-url:
+#      defaultZone: http://localhost:8761/eureka
