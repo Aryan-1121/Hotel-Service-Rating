@@ -42,8 +42,8 @@ public class UserController {
 
     @GetMapping(value = "/{userId}" , produces = MediaType.APPLICATION_JSON_VALUE)
 //    @CircuitBreaker(name = "ratingHotelBreaker", fallbackMethod = "ratingHotelFallbackMethod")
-    @Retry(name = "ratingHotelService",fallbackMethod = "ratingHotelFallbackMethod")
-//    @RateLimiter(name = "userRateLimiter", fallbackMethod = "ratingHotelFallbackMethod")
+//    @Retry(name = "ratingHotelService",fallbackMethod = "ratingHotelFallbackMethod")
+    @RateLimiter(name = "userRateLimiter", fallbackMethod = "ratingHotelFallbackMethod")
     public ResponseEntity<User> getSingleUser(@PathVariable String userId){
         logger.info("Retry count = {}",retryCount);
         retryCount++;

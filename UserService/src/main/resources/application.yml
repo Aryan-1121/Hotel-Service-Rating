@@ -85,12 +85,12 @@ resilience4j:
         waitDuration: 5s
 
 
-#  ratelimiter:
-#    instances:
-#      userRateLimiter:
-##        by default 500ns
-#        limitRefreshPeriod: 10s
-##        by default 50
-##        2 request per 5 sec
-#        limitForPeriod: 2
-#        timeoutDuration: 0s
+  ratelimiter:
+    instances:
+      userRateLimiter:
+#        by default 500ns
+        limitRefreshPeriod: 10s
+#        by default 50
+#        2 request per 5 sec
+        limitForPeriod: 2
+        timeoutDuration: 0s
