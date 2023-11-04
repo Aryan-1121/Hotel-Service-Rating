@@ -39,3 +39,37 @@ spring:
 #    register-with-eureka: true      #this is also bydefault true
 #    service-url:
 #      defaultZone: http://localhost:8761/eureka
+
+
+
+
+#     Resilience4j configuration -
+
+management:
+  health:
+    circuitbreakers:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: health
+
+
+  endpoint:
+    health:
+      show-details: ALWAYS
+
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      ratingHotelBreaker:
+        registerHealthIndicator: true
+        eventConsumerBufferSize: 10
+        failureRateThreshold: 50
+        minimumNumberOfCalls: 5
+        automaticTransitionFromOpenToHalfOpenEnabled: true
+        waitDurationInOpenState: 7s
+        permittedNumberOfCallsInHalfOpenState: 4
+        slidingWindowSize: 10
+        slidingWindowType: COUNT_BASED
