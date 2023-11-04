@@ -3,6 +3,8 @@ package com.hmproject.user.service.controllers;
 import com.hmproject.user.service.services.UserService;
 import com.hmproject.user.service.services.impl.UserServiceImpl;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
+import io.github.resilience4j.retry.annotation.Retry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,15 +38,21 @@ public class UserController {
 
     // this method call downline implementation contains communication with different microservices, therefore we have to create a circuit breaker here and a fallBack method too.
 
+    static int retryCount=1;
+
     @GetMapping(value = "/{userId}" , produces = MediaType.APPLICATION_JSON_VALUE)
-    @CircuitBreaker(name = "ratingHotelBreaker", fallbackMethod = "ratingHotelFallbackMethod")
+//    @CircuitBreaker(name = "ratingHotelBreaker", fallbackMethod = "ratingHotelFallbackMethod")
+    @Retry(name = "ratingHotelService",fallbackMethod = "ratingHotelFallbackMethod")
+//    @RateLimiter(name = "userRateLimiter", fallbackMethod = "ratingHotelFallbackMethod")
     public ResponseEntity<User> getSingleUser(@PathVariable String userId){
+        logger.info("Retry count = {}",retryCount);
+        retryCount++;
         User userFromDb= userService.getUser(userId);
         return ResponseEntity.ok(userFromDb);
 
     }
 
-//     creating fallBack method for circuitBreaker
+//     creating fallBack method for circuitBreaker  and Retry
     public ResponseEntity<User> ratingHotelFallbackMethod(String userId, Exception ex){
         logger.info("this is fallback being executed coz service is down  : - {}",ex.getMessage());
         User user =User.builder()
@@ -52,7 +60,6 @@ public class UserController {
                 .userId("999999")
                 .about("this is dummy user created because some service is down !!")
                 .email("dummy@gmail.com").build();
-
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 

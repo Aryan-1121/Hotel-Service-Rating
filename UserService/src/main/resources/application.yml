@@ -73,3 +73,24 @@ resilience4j:
         permittedNumberOfCallsInHalfOpenState: 4
         slidingWindowSize: 10
         slidingWindowType: COUNT_BASED
+
+
+
+  retry:
+    instances:
+      ratingHotelService:
+#         generally keep maxretry attempts for 3
+        maxAttempts: 4
+#        generally not greater than 2 sec
+        waitDuration: 5s
+
+
+#  ratelimiter:
+#    instances:
+#      userRateLimiter:
+##        by default 500ns
+#        limitRefreshPeriod: 10s
+##        by default 50
+##        2 request per 5 sec
+#        limitForPeriod: 2
+#        timeoutDuration: 0s
